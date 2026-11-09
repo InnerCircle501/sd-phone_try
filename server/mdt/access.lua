@@ -43,6 +43,7 @@ local SHIPPED_PERMISSIONS = {
     ['sops.manage']     = 4,
     ['katwarn.view']    = 0,
     ['dispatch.radio.view'] = 0,
+    ['dispatch.radio.manage'] = 99999,
 }
 
 ---@type table<string, number> Permission key -> minimum grade. An absent key is denied. Built as a
