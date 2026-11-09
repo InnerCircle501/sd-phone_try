@@ -1368,3 +1368,11 @@ require 'client.compat.qbphone'
 CreateThread(function()
     TriggerEvent('sd-phone:ready')
 end)
+
+
+-- KATWarn changed on the server. Refresh the open MDT without opening the phone.
+RegisterNetEvent('sd-phone:client:mdt:katwarn', function()
+    if phoneState.open or companion.companionOpen then
+        SendNUIMessage({ action = 'sd-phone:mdt:katwarn' })
+    end
+end)
