@@ -23,9 +23,11 @@ local function isAdmin(src)
 end
 
 local function actor(src)
+    local admin = isAdmin(src)
+    if not admin and not access.can(src, 'katwarn.view') then return nil, false end
     local me = access.identity(src)
-    if me then return me, isAdmin(src) end
-    if not isAdmin(src) then return nil, false end
+    if me then return me, admin end
+    if not admin then return nil, false end
     return {
         source = src,
         citizenid = player.getIdentifier(src) or ('source:' .. tostring(src)),
