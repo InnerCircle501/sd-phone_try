@@ -63,7 +63,7 @@ local BOSS_BYPASS = MDT.BossBypass ~= false
 ---which service a capability belongs to, and a server owner moving `jail.book` to the medical
 ---terminal would be describing something that has no handler behind it.
 local KEY_DOMAIN = {
-    ['katwarn.view']        = { leo = true, ems = true },
+    ['katwarn.view']        = { leo = true, ems = true, doj = true },
     ['patients.view']       = { ems = true },
     ['patients.edit']       = { ems = true },
     ['protocols.view']      = { ems = true },
