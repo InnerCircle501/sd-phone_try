@@ -88,6 +88,9 @@ import {
     type HandsetPhoto,
     type HandsetSummary,
     type HandsetThread,
+    type KatwarnAlert,
+    type KatwarnState,
+    type KatwarnCategory,
 } from './data';
 
 const HOUR = 3600;
@@ -2180,7 +2183,6 @@ export async function cctvClose(): Promise<void> {
 }
 
 
-import type { KatwarnAlert, KatwarnState, KatwarnCategory } from './data';
 
 export async function mdtKatwarnList(): Promise<KatwarnState> {
     if (!isFiveM) return { rows: [], canCreate: true, isAdmin: true, job: 'lspd' };
