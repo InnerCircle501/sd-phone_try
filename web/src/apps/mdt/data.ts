@@ -26,17 +26,18 @@ export type MdtSection =
     | 'affairs'
     | 'court'
     | 'expunge'
-    | 'sops';
+    | 'sops'
+    | 'katwarn';
 
 export type DepartmentType = 'leo' | 'ems' | 'doj';
 
 export const LEO_SECTIONS: readonly MdtSection[] = [
-    'home', 'dispatch', 'cameras', 'cctv', 'profiles', 'vehicles', 'weapons', 'reports', 'cases',
+    'home', 'dispatch', 'katwarn', 'cameras', 'cctv', 'profiles', 'vehicles', 'weapons', 'reports', 'cases',
     'warrants', 'offences', 'sops', 'employees', 'affairs', 'chat', 'jail', 'phone', 'logs',
 ] as const;
 
 export const EMS_SECTIONS: readonly MdtSection[] = [
-    'home', 'dispatch', 'patients', 'reports', 'cases',
+    'home', 'dispatch', 'katwarn', 'patients', 'reports', 'cases',
     'protocols', 'sops', 'employees', 'chat', 'logs',
 ] as const;
 
@@ -139,6 +140,7 @@ export const SECTION_PERMISSION: Record<MdtSection, MdtPermission> = {
     court:     'court.view',
     expunge:   'expunge.view',
     sops:      'sops.view',
+    katwarn:   'katwarn.view',
 };
 
 export type ChargeClass = 'felony' | 'misdemeanor' | 'infraction';
@@ -984,4 +986,26 @@ export interface SopCatalog {
     rows:      Sop[];
     removed:   Sop[];
     canManage: boolean;
+}
+
+
+export type KatwarnCategory = 'police' | 'traffic' | 'medical';
+export interface KatwarnAlert {
+    id: number;
+    title: string;
+    message: string;
+    category: KatwarnCategory;
+    location: string | null;
+    issuer_name: string;
+    issuer_job: string;
+    created_at: string;
+    resolved_at: string | null;
+    resolved_by: string | null;
+    status: 'active' | 'resolved';
+}
+export interface KatwarnState {
+    rows: KatwarnAlert[];
+    canCreate: boolean;
+    isAdmin: boolean;
+    job: string;
 }
