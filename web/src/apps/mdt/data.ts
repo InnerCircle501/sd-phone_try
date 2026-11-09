@@ -27,12 +27,13 @@ export type MdtSection =
     | 'court'
     | 'expunge'
     | 'sops'
-    | 'katwarn';
+    | 'katwarn'
+    | 'radio';
 
 export type DepartmentType = 'leo' | 'ems' | 'doj';
 
 export const LEO_SECTIONS: readonly MdtSection[] = [
-    'home', 'dispatch', 'katwarn', 'cameras', 'cctv', 'profiles', 'vehicles', 'weapons', 'reports', 'cases',
+    'home', 'dispatch', 'katwarn', 'radio', 'cameras', 'cctv', 'profiles', 'vehicles', 'weapons', 'reports', 'cases',
     'warrants', 'offences', 'sops', 'employees', 'affairs', 'chat', 'jail', 'phone', 'logs',
 ] as const;
 
@@ -116,7 +117,9 @@ export type MdtPermission =
     | 'shared.edit'
     | 'sops.view'
     | 'sops.manage'
-    | 'katwarn.view';
+    | 'katwarn.view'
+    | 'dispatch.radio.view'
+    | 'dispatch.radio.manage';
 
 export const SECTION_PERMISSION: Record<MdtSection, MdtPermission> = {
     home:      'home.view',
@@ -142,6 +145,7 @@ export const SECTION_PERMISSION: Record<MdtSection, MdtPermission> = {
     expunge:   'expunge.view',
     sops:      'sops.view',
     katwarn:   'katwarn.view',
+    radio:     'dispatch.radio.view',
 };
 
 export type ChargeClass = 'felony' | 'misdemeanor' | 'infraction';
@@ -1009,4 +1013,23 @@ export interface KatwarnState {
     canCreate: boolean;
     isAdmin: boolean;
     job: string;
+}
+
+
+export interface RadioOfficer {
+    source: number;
+    name: string;
+    job: string;
+    callsign?: string | null;
+}
+
+export interface RadioChannel {
+    channel: number;
+    officers: RadioOfficer[];
+}
+
+export interface RadioState {
+    enabled: boolean;
+    canManage: boolean;
+    channels: RadioChannel[];
 }
