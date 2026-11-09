@@ -62,6 +62,8 @@ local shares    = require 'server.mdt.shares'
 local revisions = require 'server.mdt.revisions'
 ---@type table KATWarn alerts integrated into the terminal.
 local katwarn   = require 'server.mdt.katwarn'
+---@type table pma-voice radio overview and dispatch controls.
+local radio     = require 'server.mdt.radio'
 ---@type table Native MDT exports (server.mdt.public): the stable SD-facing API, also used by the
 ---lb-tablet compatibility layer so both surfaces share the same authorization and data rules.
 require 'server.mdt.public'
@@ -109,6 +111,9 @@ local ROUTES = {
     { 'katwarn:list',        katwarn,   'list' },
     { 'katwarn:create',      katwarn,   'create' },
     { 'katwarn:resolve',     katwarn,   'resolve' },
+
+    { 'radio:list',          radio,     'list' },
+    { 'radio:move',          radio,     'move' },
 
     { 'dispatch:state',      dispatch,  'state' },
     { 'dispatch:setStatus',  dispatch,  'setStatus' },
