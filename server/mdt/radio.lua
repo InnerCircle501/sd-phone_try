@@ -42,11 +42,11 @@ local function list()
     return channels
 end
 
-radio.list = access.gated('dispatch.radio.view', function()
+radio.list = access.gated('dispatch.radio.view', function(src)
     if not pmaReady() then
-        return { success = true, data = { enabled = false, channels = {} } }
+        return { success = true, data = { enabled = false, canManage = access.can(src, 'dispatch.radio.manage'), channels = {} } }
     end
-    return { success = true, data = { enabled = true, channels = list() } }
+    return { success = true, data = { enabled = true, canManage = access.can(src, 'dispatch.radio.manage'), channels = list() } }
 end)
 
 radio.move = access.audited('dispatch.radio.manage', function(src, payload, me)
