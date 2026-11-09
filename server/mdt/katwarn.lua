@@ -104,6 +104,7 @@ function katwarn.create(src, payload)
 
     local description = ('%s: %s%s'):format(title, message, location ~= '' and (' | Ort: ' .. location) or '')
     for _, playerId in ipairs(GetPlayers()) do
+        TriggerClientEvent('sd-phone:mdt:katwarn', tonumber(playerId))
         TriggerClientEvent('ox_lib:notify', tonumber(playerId), {
             title = 'KATWarn · ' .. rule.label,
             description = description,
@@ -134,6 +135,9 @@ function katwarn.resolve(src, payload)
         WHERE id = ? AND status = 'active'
     ]]):format(TABLE), { me.name, id })
     if not changed or changed < 1 then return fail('Die Warnung konnte nicht aufgelöst werden.') end
+    for _, playerId in ipairs(GetPlayers()) do
+        TriggerClientEvent('sd-phone:mdt:katwarn', tonumber(playerId))
+    end
     return ok({ id = id })
 end
 
