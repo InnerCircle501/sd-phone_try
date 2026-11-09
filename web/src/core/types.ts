@@ -498,6 +498,7 @@ export type NuiMessage =
     | { action: 'sd-phone:mdt:live';     data: LiveEvent }
     | { action: 'sd-phone:mdt:offences'; data: Record<string, never> }
     | { action: 'sd-phone:mdt:sops';     data: Record<string, never> }
+    | { action: 'sd-phone:mdt:katwarn' }
     | { action: 'sd-phone:mdt:shares';   data: { type: 'report' | 'case' | 'warrant'; ref: string; access?: 'view' | 'edit' } }
     | { action: 'sd-phone:mdt:bodycam:enter'; data: { cameraId: string; kind: string; officer: string; callsign: string | null; plate: string | null; model: string | null; unit: string | null; rank: string | null; canRecord: boolean; auto: boolean; profile: { fps: number; width: number; bitrate: number; maxSeconds: number; minSeconds: number } } }
     | { action: 'sd-phone:mdt:bodycam:exit';   data: Record<string, never> }
