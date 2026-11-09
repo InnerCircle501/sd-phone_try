@@ -88,6 +88,10 @@ import {
     type HandsetPhoto,
     type HandsetSummary,
     type HandsetThread,
+    type KatwarnAlert,
+    type KatwarnState,
+    type KatwarnCategory,
+    type RadioState,
 } from './data';
 
 const HOUR = 3600;
@@ -2177,4 +2181,35 @@ export async function cctvWatch(cameraId: string): Promise<boolean> {
 export async function cctvClose(): Promise<void> {
     if (!isFiveM) return;
     await apiCall('sd-phone:cctv:close', {});
+}
+
+
+
+export async function mdtKatwarnList(): Promise<KatwarnState> {
+    if (!isFiveM) return { rows: [], canCreate: true, isAdmin: true, job: 'lspd' };
+    const data = await apiData<KatwarnState>('sd-phone:mdt:katwarn:list');
+    return data ?? { rows: [], canCreate: false, isAdmin: false, job: '' };
+}
+
+export async function mdtKatwarnCreate(input: {
+    title: string; message: string; location: string; category: KatwarnCategory;
+}): Promise<boolean> {
+    if (!isFiveM) return true;
+    return (await apiCall('sd-phone:mdt:katwarn:create', input)).success === true;
+}
+
+export async function mdtKatwarnResolve(id: number): Promise<boolean> {
+    if (!isFiveM) return true;
+    return (await apiCall('sd-phone:mdt:katwarn:resolve', { id })).success === true;
+}
+
+
+export async function mdtRadioList(): Promise<RadioState> {
+    if (!isFiveM) return { enabled: true, canManage: true, channels: Array.from({ length: 100 }, (_, i) => ({ channel: i + 1, officers: [] })) };
+    return (await apiData<RadioState>('sd-phone:mdt:radio:list')) ?? { enabled: false, canManage: false, channels: [] };
+}
+
+export async function mdtRadioMove(source: number, channel: number): Promise<boolean> {
+    if (!isFiveM) return true;
+    return (await apiCall('sd-phone:mdt:radio:move', { source, channel })).success === true;
 }

@@ -1368,3 +1368,4 @@ require 'client.compat.qbphone'
 CreateThread(function()
     TriggerEvent('sd-phone:ready')
 end)
+

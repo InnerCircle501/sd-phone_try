@@ -36,6 +36,8 @@ local ACTIONS = {
     'patients:search', 'patients:get', 'patients:update',
     'protocols:list', 'protocols:save', 'protocols:delete',
     'sops:list', 'sops:save', 'sops:remove', 'sops:reset',
+    'katwarn:list', 'katwarn:create', 'katwarn:resolve',
+    'radio:list', 'radio:move',
     'affairs:list', 'affairs:get', 'affairs:officer', 'affairs:file', 'affairs:update',
     'affairs:note', 'affairs:close',
     'court:list', 'court:get', 'court:citizen', 'court:file', 'court:manage', 'court:note', 'court:rule',
@@ -146,3 +148,14 @@ RegisterNetEvent('sd-phone:client:mdt:shares', function(data)
     SendNUIMessage({ action = 'sd-phone:mdt:shares', data = data })
 end)
 
+
+
+---Server -> React: KATWarn history changed, so every open terminal refreshes its list.
+RegisterNetEvent('sd-phone:client:mdt:katwarn', function()
+    SendNUIMessage({ action = 'sd-phone:mdt:katwarn' })
+end)
+
+---Server -> React: refresh the pma-voice channel board after a channel move.
+RegisterNetEvent('sd-phone:client:mdt:radio', function()
+    SendNUIMessage({ action = 'sd-phone:mdt:radio', data = {} })
+end)

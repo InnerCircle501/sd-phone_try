@@ -41,6 +41,9 @@ local SHIPPED_PERMISSIONS = {
     ['shared.edit']   = 0,
     ['offences.manage'] = 4,
     ['sops.manage']     = 4,
+    ['katwarn.view']    = 0,
+    ['dispatch.radio.view'] = 0,
+    ['dispatch.radio.manage'] = 99999,
 }
 
 ---@type table<string, number> Permission key -> minimum grade. An absent key is denied. Built as a
@@ -62,6 +65,9 @@ local BOSS_BYPASS = MDT.BossBypass ~= false
 ---which service a capability belongs to, and a server owner moving `jail.book` to the medical
 ---terminal would be describing something that has no handler behind it.
 local KEY_DOMAIN = {
+    ['katwarn.view']        = { leo = true, ems = true, doj = true },
+    ['dispatch.radio.view']  = { leo = true },
+    ['dispatch.radio.manage'] = { leo = true },
     ['patients.view']       = { ems = true },
     ['patients.edit']       = { ems = true },
     ['protocols.view']      = { ems = true },
@@ -251,7 +257,7 @@ function access.can(src, key)
     -- The robe outranks the bypass: a chief attorney is still not a judge.
     if BENCH_ONLY[key] and dept.bench ~= true then return false end
 
-    if BOSS_BYPASS and job.isBoss(src, dept.job, dept.bossGrade or 0) then return true end
+    if key ~= 'dispatch.radio.manage' and BOSS_BYPASS and job.isBoss(src, dept.job, dept.bossGrade or 0) then return true end
 
     local minimum = PERMISSIONS[key]
     if type(minimum) ~= 'number' then return false end

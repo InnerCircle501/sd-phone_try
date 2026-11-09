@@ -26,22 +26,24 @@ export type MdtSection =
     | 'affairs'
     | 'court'
     | 'expunge'
-    | 'sops';
+    | 'sops'
+    | 'katwarn'
+    | 'radio';
 
 export type DepartmentType = 'leo' | 'ems' | 'doj';
 
 export const LEO_SECTIONS: readonly MdtSection[] = [
-    'home', 'dispatch', 'cameras', 'cctv', 'profiles', 'vehicles', 'weapons', 'reports', 'cases',
+    'home', 'dispatch', 'katwarn', 'radio', 'cameras', 'cctv', 'profiles', 'vehicles', 'weapons', 'reports', 'cases',
     'warrants', 'offences', 'sops', 'employees', 'affairs', 'chat', 'jail', 'phone', 'logs',
 ] as const;
 
 export const EMS_SECTIONS: readonly MdtSection[] = [
-    'home', 'dispatch', 'patients', 'reports', 'cases',
+    'home', 'dispatch', 'katwarn', 'patients', 'reports', 'cases',
     'protocols', 'sops', 'employees', 'chat', 'logs',
 ] as const;
 
 export const DOJ_SECTIONS: readonly MdtSection[] = [
-    'home', 'court', 'expunge', 'profiles', 'warrants', 'reports',
+    'home', 'katwarn', 'court', 'expunge', 'profiles', 'warrants', 'reports',
     'cases', 'offences', 'employees', 'chat', 'logs',
 ] as const;
 
@@ -114,7 +116,10 @@ export type MdtPermission =
     | 'shares.revoke'
     | 'shared.edit'
     | 'sops.view'
-    | 'sops.manage';
+    | 'sops.manage'
+    | 'katwarn.view'
+    | 'dispatch.radio.view'
+    | 'dispatch.radio.manage';
 
 export const SECTION_PERMISSION: Record<MdtSection, MdtPermission> = {
     home:      'home.view',
@@ -139,6 +144,8 @@ export const SECTION_PERMISSION: Record<MdtSection, MdtPermission> = {
     court:     'court.view',
     expunge:   'expunge.view',
     sops:      'sops.view',
+    katwarn:   'katwarn.view',
+    radio:     'dispatch.radio.view',
 };
 
 export type ChargeClass = 'felony' | 'misdemeanor' | 'infraction';
@@ -984,4 +991,45 @@ export interface SopCatalog {
     rows:      Sop[];
     removed:   Sop[];
     canManage: boolean;
+}
+
+
+export type KatwarnCategory = 'police' | 'traffic' | 'medical';
+export interface KatwarnAlert {
+    id: number;
+    title: string;
+    message: string;
+    category: KatwarnCategory;
+    location: string | null;
+    issuer_name: string;
+    issuer_job: string;
+    created_at: string;
+    resolved_at: string | null;
+    resolved_by: string | null;
+    status: 'active' | 'resolved';
+}
+export interface KatwarnState {
+    rows: KatwarnAlert[];
+    canCreate: boolean;
+    isAdmin: boolean;
+    job: string;
+}
+
+
+export interface RadioOfficer {
+    source: number;
+    name: string;
+    job: string;
+    callsign?: string | null;
+}
+
+export interface RadioChannel {
+    channel: number;
+    officers: RadioOfficer[];
+}
+
+export interface RadioState {
+    enabled: boolean;
+    canManage: boolean;
+    channels: RadioChannel[];
 }
