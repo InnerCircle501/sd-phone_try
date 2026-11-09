@@ -104,7 +104,7 @@ function katwarn.create(src, payload)
 
     local description = ('%s: %s%s'):format(title, message, location ~= '' and (' | Ort: ' .. location) or '')
     for _, playerId in ipairs(GetPlayers()) do
-        TriggerClientEvent('sd-phone:mdt:katwarn', tonumber(playerId))
+        TriggerClientEvent('sd-phone:client:mdt:katwarn', tonumber(playerId))
         TriggerClientEvent('ox_lib:notify', tonumber(playerId), {
             title = 'KATWarn · ' .. rule.label,
             description = description,
