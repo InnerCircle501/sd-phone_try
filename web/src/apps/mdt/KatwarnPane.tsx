@@ -8,7 +8,7 @@ import { Pill } from '@/ui/Pill';
 import { Scroller } from '@/ui/Scroller';
 import type { KatwarnAlert, KatwarnCategory } from './data';
 import { mdtKatwarnCreate, mdtKatwarnList, mdtKatwarnResolve } from './mdtApi';
-import { mdtPanePad, mdtRowMeta, mdtRowTitle, mdtSectionHeader } from './mdtTheme';
+import { mdtPanePad, mdtRowMeta, mdtRowTitle } from './mdtTheme';
 import { MdtButton } from './ui/MdtButton';
 import { MdtField } from './ui/MdtField';
 import { useMdtSession } from './useMdtSession';
