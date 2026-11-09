@@ -41,6 +41,7 @@ local SHIPPED_PERMISSIONS = {
     ['shared.edit']   = 0,
     ['offences.manage'] = 4,
     ['sops.manage']     = 4,
+    ['katwarn.view']    = 0,
 }
 
 ---@type table<string, number> Permission key -> minimum grade. An absent key is denied. Built as a
@@ -62,6 +63,7 @@ local BOSS_BYPASS = MDT.BossBypass ~= false
 ---which service a capability belongs to, and a server owner moving `jail.book` to the medical
 ---terminal would be describing something that has no handler behind it.
 local KEY_DOMAIN = {
+    ['katwarn.view']        = { leo = true, ems = true },
     ['patients.view']       = { ems = true },
     ['patients.edit']       = { ems = true },
     ['protocols.view']      = { ems = true },
