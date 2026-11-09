@@ -115,7 +115,8 @@ export type MdtPermission =
     | 'shares.revoke'
     | 'shared.edit'
     | 'sops.view'
-    | 'sops.manage';
+    | 'sops.manage'
+    | 'katwarn.view';
 
 export const SECTION_PERMISSION: Record<MdtSection, MdtPermission> = {
     home:      'home.view',
