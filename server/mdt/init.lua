@@ -60,6 +60,8 @@ local live      = require 'server.mdt.live'
 local shares    = require 'server.mdt.shares'
 ---@type table Revision history (server.mdt.revisions): the amendment trail and its restore.
 local revisions = require 'server.mdt.revisions'
+---@type table KATWarn alerts integrated into the terminal.
+local katwarn   = require 'server.mdt.katwarn'
 ---@type table Native MDT exports (server.mdt.public): the stable SD-facing API, also used by the
 ---lb-tablet compatibility layer so both surfaces share the same authorization and data rules.
 require 'server.mdt.public'
@@ -77,6 +79,7 @@ local SWEEP_SECONDS = math.max(5, math.floor(tonumber((MDT.Dispatch or {}).Sweep
 
 ---@type boolean Whether the terminals are built and answering. Set once the schema is up.
 local available = false
+local katwarnReady = false
 
 if ENABLED then
     CreateThread(function()
@@ -84,6 +87,12 @@ if ENABLED then
         if not ok then
             boot.schemaFailed('mdt', err)
             return
+        end
+        local kwOk, kwErr = pcall(katwarn.ensureSchema)
+        if kwOk then
+            katwarnReady = true
+        else
+            print(('^1[sd-phone:mdt]^0 KATWarn schema failed: %s'):format(kwErr))
         end
         available = true
         boot.schemaReady()
@@ -96,6 +105,10 @@ end
 local ROUTES = {
     { 'bootstrap',           actions,   'bootstrap' },
     { 'home',                actions,   'home' },
+
+    { 'katwarn:list',        katwarn,   'list' },
+    { 'katwarn:create',      katwarn,   'create' },
+    { 'katwarn:resolve',     katwarn,   'resolve' },
 
     { 'dispatch:state',      dispatch,  'state' },
     { 'dispatch:setStatus',  dispatch,  'setStatus' },
@@ -281,6 +294,9 @@ for i = 1, #ROUTES do
         register(action, function(src, payload)
 
             if not available then return refuse() end
+            if action:sub(1, 8) == 'katwarn:' and not katwarnReady then
+                return { success = false, message = 'KATWarn-Datenbank ist nicht verfügbar.' }
+            end
             return fn(src, payload)
         end)
     else
