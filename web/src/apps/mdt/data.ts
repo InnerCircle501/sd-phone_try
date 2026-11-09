@@ -42,7 +42,7 @@ export const EMS_SECTIONS: readonly MdtSection[] = [
 ] as const;
 
 export const DOJ_SECTIONS: readonly MdtSection[] = [
-    'home', 'court', 'expunge', 'profiles', 'warrants', 'reports',
+    'home', 'katwarn', 'court', 'expunge', 'profiles', 'warrants', 'reports',
     'cases', 'offences', 'employees', 'chat', 'logs',
 ] as const;
 
