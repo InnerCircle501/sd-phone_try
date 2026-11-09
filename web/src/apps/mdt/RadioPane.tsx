@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Radio, RefreshCw, Users } from 'lucide-react';
 
 import { useAsyncData } from '@/hooks/useAsyncData';
@@ -17,6 +17,10 @@ export function RadioPane() {
     const [error, setError] = useState('');
 
     useNuiEvent('sd-phone:mdt:radio', refetch);
+    useEffect(() => {
+        const timer = window.setInterval(() => refetch(), 5000);
+        return () => window.clearInterval(timer);
+    }, [refetch]);
 
     async function move(officer: RadioOfficer) {
         const channel = targetChannels[officer.source] ?? 1;
