@@ -91,6 +91,7 @@ import {
     type KatwarnAlert,
     type KatwarnState,
     type KatwarnCategory,
+    type RadioState,
 } from './data';
 
 const HOUR = 3600;
@@ -2200,4 +2201,15 @@ export async function mdtKatwarnCreate(input: {
 export async function mdtKatwarnResolve(id: number): Promise<boolean> {
     if (!isFiveM) return true;
     return (await apiCall('sd-phone:mdt:katwarn:resolve', { id })).success === true;
+}
+
+
+export async function mdtRadioList(): Promise<RadioState> {
+    if (!isFiveM) return { enabled: true, canManage: true, channels: Array.from({ length: 100 }, (_, i) => ({ channel: i + 1, officers: [] })) };
+    return (await apiData<RadioState>('sd-phone:mdt:radio:list')) ?? { enabled: false, canManage: false, channels: [] };
+}
+
+export async function mdtRadioMove(source: number, channel: number): Promise<boolean> {
+    if (!isFiveM) return true;
+    return (await apiCall('sd-phone:mdt:radio:move', { source, channel })).success === true;
 }
