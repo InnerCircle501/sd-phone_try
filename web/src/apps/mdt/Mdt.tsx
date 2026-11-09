@@ -33,6 +33,7 @@ import { ProtocolsPane } from './ProtocolsPane';
 import { ReportsPane } from './ReportsPane';
 import { VehiclesPane } from './VehiclesPane';
 import { WarrantsPane } from './WarrantsPane';
+import { KatwarnPane } from './KatwarnPane';
 import { WeaponsPane } from './WeaponsPane';
 import { MDT_ACCENT, MDT_STATUS_RESERVE, mdtBackdrop } from './mdtTheme';
 import { MdtSessionProvider, useMdtSession, useMdtSessionState } from './useMdtSession';
@@ -61,6 +62,7 @@ function pane(section: MdtSection) {
         case 'court':     return <CourtPane />;
         case 'expunge':   return <ExpungePane />;
         case 'sops':      return <SopsPane />;
+        case 'katwarn':   return <KatwarnPane />;
         default:          return <HomePane />;
     }
 }
