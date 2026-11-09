@@ -1,7 +1,7 @@
 import {
     BookText, Car, Cctv, ClipboardList, Crosshair, Eraser, FileText, FolderOpen, Gavel, HeartPulse, IdCard,
     Landmark, LayoutDashboard, Lock, MessageSquare, RadioTower, Scale, ScrollText, ShieldQuestion,
-    Smartphone, Users, Video, AlertTriangle, type LucideIcon,
+    Smartphone, Users, Video, AlertTriangle, Radio, type LucideIcon,
 } from 'lucide-react';
 
 import { t } from '@/i18n';
@@ -38,5 +38,6 @@ export function navItems(): Record<MdtSection, MdtNavItem> {
         expunge:   { id: 'expunge',   label: t('mdt.navExpunge', 'Petitions'),   icon: Eraser },
         sops:      { id: 'sops',      label: t('mdt.navSops', 'SOPs'),           icon: BookText },
         katwarn:   { id: 'katwarn',   label: 'KATWarn',                            icon: AlertTriangle },
+        radio:     { id: 'radio',     label: 'Funkübersicht',                       icon: Radio },
     };
 }
