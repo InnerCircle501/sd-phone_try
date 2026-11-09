@@ -10,6 +10,7 @@ local util = require 'server.util'
 local katwarn = {}
 
 local TABLE = 'katwarn_alerts'
+local legacyIssuer = false
 local CATEGORIES = {
     police = { label = 'Polizeiwarnung', jobs = { lspd = true, bcso = true } },
     traffic = { label = 'Verkehrswarnung', jobs = { lspd = true, bcso = true } },
@@ -66,6 +67,24 @@ function katwarn.ensureSchema()
             KEY `idx_category` (`category`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
     ]]):format(TABLE))
+
+    -- Upgrade the earlier standalone KATWarn schema in place. That version used
+    -- `issuer` instead of `issuer_name` and did not store the character id.
+    local columns = MySQL.query.await(('SHOW COLUMNS FROM `%s`'):format(TABLE)) or {}
+    local has = {}
+    for _, column in ipairs(columns) do
+        has[column.Field or column.field] = true
+    end
+    legacyIssuer = has.issuer == true
+    if not has.issuer_name then
+        MySQL.query.await(('ALTER TABLE `%s` ADD COLUMN issuer_name VARCHAR(100) NOT NULL DEFAULT \'\' AFTER location'):format(TABLE))
+    end
+    if not has.issuer_citizenid then
+        MySQL.query.await(('ALTER TABLE `%s` ADD COLUMN issuer_citizenid VARCHAR(64) NOT NULL DEFAULT \'\' AFTER issuer_job'):format(TABLE))
+    end
+    if legacyIssuer then
+        MySQL.update.await(('UPDATE `%s` SET issuer_name = issuer WHERE issuer_name = \'\''):format(TABLE))
+    end
 end
 
 function katwarn.list(src)
@@ -103,11 +122,24 @@ function katwarn.create(src, payload)
     if #message < 5 or #message > 2000 then return fail('Die Meldung muss 5 bis 2000 Zeichen lang sein.') end
     if #location > 160 then return fail('Der Ort darf maximal 160 Zeichen lang sein.') end
 
-    local id = MySQL.insert.await(([[
-        INSERT INTO `%s` (title, message, category, location, issuer_name, issuer_job, issuer_citizenid)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-    ]]):format(TABLE), { title, message, category, location ~= '' and location or nil,
-        me.name, me.job, me.citizenid })
+    local params = { title, message, category, location ~= '' and location or nil }
+    local insertSql
+    if legacyIssuer then
+        insertSql = ([[
+            INSERT INTO `%s` (title, message, category, location, issuer, issuer_name, issuer_job, issuer_citizenid)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        ]]):format(TABLE)
+        params[#params + 1] = me.name
+    else
+        insertSql = ([[
+            INSERT INTO `%s` (title, message, category, location, issuer_name, issuer_job, issuer_citizenid)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ]]):format(TABLE)
+    end
+    params[#params + 1] = me.name
+    params[#params + 1] = me.job
+    params[#params + 1] = me.citizenid
+    local id = MySQL.insert.await(insertSql, params)
     if not id then return fail('Die Warnung konnte nicht gespeichert werden.') end
 
     local description = ('%s: %s%s'):format(title, message, location ~= '' and (' | Ort: ' .. location) or '')
