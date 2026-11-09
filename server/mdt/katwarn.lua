@@ -4,6 +4,8 @@ local access = require 'server.mdt.access'
 local player = require 'bridge.server.player'
 ---@type table Job bridge.
 local job = require 'bridge.server.job'
+---@type table Shared validation and rate-limit helpers.
+local util = require 'server.util'
 
 local katwarn = {}
 
@@ -88,6 +90,10 @@ function katwarn.create(src, payload)
     if not rule then return fail('Ungültige Warnkategorie.') end
     if not admin and not (rule.jobs[me.job] == true) then
         return fail('Deine Dienststelle darf diese Warnkategorie nicht veröffentlichen.')
+    end
+
+    if not util.rateLimit(me.citizenid, 'mdt:katwarn:create', 30000, 3) then
+        return fail('Bitte warte kurz, bevor du weitere Warnungen veröffentlichst.')
     end
 
     local title = type(payload.title) == 'string' and payload.title:match('^%s*(.-)%s*$') or ''
